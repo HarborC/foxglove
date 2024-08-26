@@ -5,7 +5,7 @@ cd ${BASE_DIR}
 
 mkdir build
 cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake .. -D Protobuf_PROTOC_EXECUTABLE=/usr/bin/protoc
 make -j8
 make install
 cd ..

@@ -3,6 +3,7 @@ file(GLOB foxglove_files
   proto_utility.cpp 
   utility.cpp
   foxglove_utils.cpp
+  visualizer.cpp
 )
 
 # visualization protos
