@@ -29,7 +29,7 @@ public:
 
 public:
   Visualizer() = delete;
-  Visualizer(const int port_num = 8088, const int sleep_time_s = 5);
+  Visualizer(const int port_num = 8088, const int sleep_time_s = -1);
 
   ~Visualizer();
 

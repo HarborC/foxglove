@@ -5,9 +5,12 @@ namespace foxglove_viz {
 Visualizer::Visualizer(const int port_num, const int sleep_time_s) {
   server_.reset(new FoxgloveServer(port_num));
   server_->Run();
-  std::cout << "wait " << sleep_time_s << " seconds to run server ..."
+
+  if (sleep_time_s >= 0) {
+    std::cout << "wait " << sleep_time_s << " seconds to run server ..."
             << std::endl;
-  std::this_thread::sleep_for(std::chrono::seconds(sleep_time_s));
+    std::this_thread::sleep_for(std::chrono::seconds(sleep_time_s));
+  }
 }
 
 Visualizer::~Visualizer() {

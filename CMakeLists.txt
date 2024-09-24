@@ -11,7 +11,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -msse4.2")
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(PCL REQUIRED)
-find_package(Protobuf 3.6 REQUIRED)
+find_package(Protobuf 3.21 REQUIRED)
 
 include_directories(
   ${EIGEN3_INCLUDE_DIR}

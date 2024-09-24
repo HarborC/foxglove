@@ -2,7 +2,6 @@ file(GLOB foxglove_files
   foxglove_server.cpp 
   proto_utility.cpp 
   utility.cpp
-  foxglove_utils.cpp
   visualizer.cpp
 )
 
