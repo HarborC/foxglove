@@ -35,7 +35,7 @@ target_include_directories(${PROJECT_NAME}_lib PUBLIC
 
 install(FILES
   ${FG_VIZ_PB_HEADER}
-  DESTINATION ${CMAKE_INSTALL_PREFIX}/include/foxglove/proto
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/include/foxglove/
 )
 
 install(FILES
