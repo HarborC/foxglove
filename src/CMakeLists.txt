@@ -7,7 +7,7 @@ file(GLOB foxglove_files
 
 # visualization protos
 set(PROTO_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/proto)
-set(PROTO_DIR ${CMAKE_CURRENT_SOURCE_DIR}/proto/foxglove/proto)
+set(PROTO_DIR ${CMAKE_CURRENT_SOURCE_DIR}/proto/foxglove)
 file(GLOB FG_VIZ_PROTO_FILES ${PROTO_DIR}/*.proto)
 FOREACH(proto ${FG_VIZ_PROTO_FILES})
   FILE(TO_NATIVE_PATH ${proto} proto_native)

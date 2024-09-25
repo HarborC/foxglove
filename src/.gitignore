@@ -1,2 +1,2 @@
-proto/foxglove/proto/*.h
-proto/foxglove/proto/*.cc
+proto/foxglove/*.h
+proto/foxglove/*.cc
