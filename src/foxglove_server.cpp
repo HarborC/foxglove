@@ -5,8 +5,8 @@
 #include <thread>
 
 #include "google/protobuf/util/time_util.h"
-#include "foxglove/proto/FrameTransform.pb.h"
-#include "foxglove/proto/SceneUpdate.pb.h"
+#include "foxglove/FrameTransform.pb.h"
+#include "foxglove/SceneUpdate.pb.h"
 
 using namespace foxglove::websocketpp;
 

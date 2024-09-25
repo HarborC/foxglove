@@ -5,14 +5,14 @@
 #include <opencv2/core.hpp>
 #include <pcl/point_cloud.h>
 
-#include "foxglove/proto/FrameTransform.pb.h"
-#include "foxglove/proto/PosesInFrame.pb.h"
-#include "foxglove/proto/Color.pb.h"
-#include "foxglove/proto/Point3.pb.h"
-#include "foxglove/proto/RawImage.pb.h"
-#include "foxglove/proto/CompressedImage.pb.h"
-#include "foxglove/proto/PointCloud.pb.h"
-#include "foxglove/proto/LinePrimitive.pb.h"
+#include "foxglove/FrameTransform.pb.h"
+#include "foxglove/PosesInFrame.pb.h"
+#include "foxglove/Color.pb.h"
+#include "foxglove/Point3.pb.h"
+#include "foxglove/RawImage.pb.h"
+#include "foxglove/CompressedImage.pb.h"
+#include "foxglove/PointCloud.pb.h"
+#include "foxglove/LinePrimitive.pb.h"
 
 #include <chrono>
 

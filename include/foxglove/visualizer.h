@@ -1,10 +1,10 @@
 #pragma once
 
 #include "foxglove/foxglove_server.h"
-#include "foxglove/proto/FrameTransform.pb.h"
-#include "foxglove/proto/PointCloud.pb.h"
-#include "foxglove/proto/PoseInFrame.pb.h"
-#include "foxglove/proto/PosesInFrame.pb.h"
+#include "foxglove/FrameTransform.pb.h"
+#include "foxglove/PointCloud.pb.h"
+#include "foxglove/PoseInFrame.pb.h"
+#include "foxglove/PosesInFrame.pb.h"
 #include "foxglove/utility.h"
 
 #include <pcl/point_types.h>
