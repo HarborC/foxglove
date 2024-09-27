@@ -14,10 +14,12 @@ namespace foxglove_viz {
 namespace foxglove {
 FoxgloveServer::FoxgloveServer(const int port_num, const std::string& server_name)
     : server_internal_(std::make_unique<Server>(port_num, server_name)) {
+#if LOG_CLIENT
 #ifdef ASIO_STANDALONE
   std::cout << "FoxgloveServer use standalone ASIO" << std::endl;
 #else
   std::cout << "FoxgloveServer use Boost ASIO" << std::endl;
+#endif
 #endif
   server_internal_->setSubscribeHandler(
       [&](ChannelId chanId) { 
@@ -37,7 +39,9 @@ FoxgloveServer::~FoxgloveServer() { this->Stop(); };
 
 void FoxgloveServer::Run() {
   if (server_running_.load()) {
+#if LOG_CLIENT
     std::cout << "Server is already running." << std::endl;
+#endif
     return;
   }
   thread_ = std::thread(&Server::run, server_internal_.get());

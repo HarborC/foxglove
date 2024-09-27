@@ -16,7 +16,6 @@ Visualizer::Visualizer(const int port_num, const int sleep_time_s) {
 Visualizer::~Visualizer() {
   if (server_)
     server_->Stop();
-  std::cout << "visualizer release~" << std::endl;
 }
 
 // show Image

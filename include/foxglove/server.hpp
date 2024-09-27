@@ -244,7 +244,9 @@ inline void Server::stop() {
 }
 
 inline void Server::run() {
+#if LOG_CLIENT
   std::cout << "Server listening on port " << _port << std::endl;
+#endif
   // _server.get_alog().write(::websocketpp::log::alevel::app,
   //                          "Server listening on port " + std::to_string(_port));
   _server.run();
