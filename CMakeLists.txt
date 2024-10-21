@@ -12,6 +12,7 @@ find_package(Eigen3 3.4 REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(PCL REQUIRED)
 find_package(Protobuf 3.21 REQUIRED)
+find_package(OpenMP REQUIRED)
 
 include_directories(
   ${EIGEN3_INCLUDE_DIR}
@@ -29,6 +30,7 @@ list(APPEND common_thirdparty_libs
   ${Boost_LIBRARIES}
   ${PCL_LIBRARIES}
   ${OpenCV_LIBS}
+  OpenMP::OpenMP_CXX
 )
 
 add_subdirectory(src)

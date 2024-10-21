@@ -4,6 +4,7 @@
 
 #include <opencv2/core.hpp>
 #include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
 
 #include "foxglove/FrameTransform.pb.h"
 #include "foxglove/PosesInFrame.pb.h"
@@ -87,6 +88,9 @@ template <>
 inline float getPtElem<Eigen::Vector3f>(const Eigen::Vector3f& pt, const size_t idx) {
   return pt(static_cast<int>(idx));
 }
+
+bool AddColorPointsToMsg(const pcl::PointCloud<pcl::PointXYZRGBA>& raw_pc, const size_t skip_n,
+                         ::foxglove::PointCloud* pc_msg);
 
 template <typename PointContainerT>
 bool AddPointsToMsg(const PointContainerT& raw_pc, const size_t skip_n,

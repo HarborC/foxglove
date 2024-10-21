@@ -71,6 +71,48 @@ void setLineProps(const ::foxglove::LinePrimitive::Type& line_type,
   line->set_thickness(thickness);
 }
 
+bool AddColorPointsToMsg(const pcl::PointCloud<pcl::PointXYZRGBA>& raw_pc, const size_t skip_n,
+                         ::foxglove::PointCloud* pc_msg) {
+  if (pc_msg->point_stride() != 16 && pc_msg->point_stride() != 12) {
+    return false;
+  }
+
+  const size_t pt_to_add_num = raw_pc.size();
+  const size_t actual_pt_to_add_num = pt_to_add_num / skip_n;
+  auto msg_data = pc_msg->mutable_data();
+  const size_t offset_start = msg_data->size();
+  msg_data->resize(msg_data->size() + actual_pt_to_add_num * pc_msg->point_stride());
+
+  size_t offset_i = offset_start;
+  std::vector<char> temp_buf(4);
+  auto cp_float_to_msg_data = [&temp_buf, msg_data](const float val, const size_t offset) {
+    std::memcpy(temp_buf.data(), &(val), 4);
+    (*msg_data)[offset + 0] = temp_buf[0];
+    (*msg_data)[offset + 1] = temp_buf[1];
+    (*msg_data)[offset + 2] = temp_buf[2];
+    (*msg_data)[offset + 3] = temp_buf[3];
+  };
+  for (size_t pi = 0; pi < raw_pc.size(); pi += skip_n) {
+    if (offset_i >= msg_data->size()) {
+      break;
+    }
+    const auto& pt_i = raw_pc.at(pi);
+    cp_float_to_msg_data(getPtElem(pt_i, 0), offset_i);
+    offset_i += 4;
+    cp_float_to_msg_data(getPtElem(pt_i, 1), offset_i);
+    offset_i += 4;
+    cp_float_to_msg_data(getPtElem(pt_i, 2), offset_i);
+    offset_i += 4;
+
+    (*msg_data)[offset_i++] = static_cast<char>(pt_i.r);
+    (*msg_data)[offset_i++] = static_cast<char>(pt_i.g);
+    (*msg_data)[offset_i++] = static_cast<char>(pt_i.b);
+    (*msg_data)[offset_i++] = static_cast<char>(pt_i.a);
+    
+  }
+  return true;
+}
+
 }  // namespace utility
 
 }  // namespace foxglove

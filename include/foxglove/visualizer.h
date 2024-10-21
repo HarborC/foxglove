@@ -43,6 +43,11 @@ public:
                       const std::vector<std::vector<uint8_t>> &colors,
                       const std::string &parent_frm, const size_t &pc_skip = 1);
 
+  // show pointcloud
+  void showPointCloudRGBA(const std::string &topic_nm, const int64_t &usec,
+                          const pcl::PointCloud<pcl::PointXYZRGBA> &pcd,
+                          const std::string &parent_frm, const size_t &pc_skip = 1);
+
   // show pose
   void showPose(const std::string &topic_nm, const int64_t &usec,
                 const Eigen::Matrix4f &pose, const std::string &parent_frm,

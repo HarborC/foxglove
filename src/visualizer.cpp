@@ -1,4 +1,5 @@
 #include "foxglove/visualizer.h"
+#include <omp.h>
 
 namespace foxglove_viz {
 
@@ -50,22 +51,22 @@ void Visualizer::showPointCloud(const std::string &topic_nm,
                                 const std::string &parent_frm,
                                 const size_t &pc_skip) {
   pcl::PointCloud<pcl::PointXYZ> pcd_new;
+  pcd_new.resize(pcd.size());
+
+  #pragma omp parallel for
   for (size_t i = 0; i < pcd.size(); i++) {
-    pcl::PointXYZ pt;
+    pcl::PointXYZ& pt = pcd_new.points[i];
     pt.x = pcd[i][0];
     pt.y = pcd[i][1];
     pt.z = pcd[i][2];
-    pcd_new.push_back(pt);
   }
 
   std::vector<std::vector<uint8_t>> new_colors;
   if (colors.size() != pcd.size()) {
-    new_colors.resize(pcd.size());
-    for (size_t i = 0; i < pcd.size(); i++) {
-      new_colors[i] = {0, 255, 0, 255};
-    }
+    new_colors.resize(pcd.size(), {0, 255, 0, 255});
   } else {
     new_colors = colors;
+    #pragma omp parallel for
     for (size_t i = 0; i < colors.size(); i++) {
       new_colors[i].push_back(255);
     }
@@ -74,6 +75,18 @@ void Visualizer::showPointCloud(const std::string &topic_nm,
   fg_msg::PointCloud pc_msg;
   fg::utility::SetPointCloudMsgProperties(&pc_msg);
   if (fg::utility::AddPointsToMsg(pcd_new, pc_skip, new_colors, &pc_msg)) {
+    pc_msg.set_frame_id(parent_frm);
+    fg::utility::SetMsgTimeStamp(usec, &pc_msg);
+    server_->SendMessage(topic_nm, usec, pc_msg);
+  }
+}
+
+void Visualizer::showPointCloudRGBA(const std::string &topic_nm, const int64_t &usec,
+                                    const pcl::PointCloud<pcl::PointXYZRGBA> &pcd,
+                                    const std::string &parent_frm, const size_t &pc_skip) {
+  fg_msg::PointCloud pc_msg;
+  fg::utility::SetPointCloudMsgProperties(&pc_msg);
+  if (fg::utility::AddColorPointsToMsg(pcd, pc_skip, &pc_msg)) {
     pc_msg.set_frame_id(parent_frm);
     fg::utility::SetMsgTimeStamp(usec, &pc_msg);
     server_->SendMessage(topic_nm, usec, pc_msg);
