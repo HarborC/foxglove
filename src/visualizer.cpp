@@ -21,7 +21,8 @@ Visualizer::~Visualizer() {
 
 // show Image
 void Visualizer::showImage(const std::string &topic_nm, const int64_t &usec,
-                           const cv::Mat &viz_img, bool b_send_compressedimg) {
+                           const cv::Mat &viz_img, const std::string &parent_frm, 
+                           bool b_send_compressedimg) {
   if (viz_img.empty()) {
     std::cerr << "Empty image" << std::endl;
     return;
@@ -30,13 +31,13 @@ void Visualizer::showImage(const std::string &topic_nm, const int64_t &usec,
   if (b_send_compressedimg) {
     fg_msg::CompressedImage compressed_img;
     fg::utility::SetMsgTimeStamp(usec, &compressed_img);
-    compressed_img.set_frame_id("cam");
+    compressed_img.set_frame_id(parent_frm);
     fg::utility::SetImgMsg(viz_img, ".jpeg", &compressed_img);
     server_->SendMessage(topic_nm, usec, compressed_img);
   } else {
     fg_msg::RawImage raw_msg;
     fg::utility::SetMsgTimeStamp(usec, &raw_msg);
-    raw_msg.set_frame_id("cam");
+    raw_msg.set_frame_id(parent_frm);
     if (fg::utility::SetImgMsg(viz_img, &raw_msg)) {
       server_->SendMessage(topic_nm, usec, raw_msg);
     }

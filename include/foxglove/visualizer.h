@@ -35,7 +35,8 @@ public:
 
   // show Image
   void showImage(const std::string &topic_nm, const int64_t &usec,
-                 const cv::Mat &viz_img, bool b_send_compressedimg = true);
+                 const cv::Mat &viz_img, const std::string &parent_frm, 
+                 bool b_send_compressedimg = true);
 
   // show pointcloud
   void showPointCloud(const std::string &topic_nm, const int64_t &usec,
