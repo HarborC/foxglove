@@ -47,7 +47,7 @@ public:
   void show3DModel(const std::string &topic_nm, const int64_t &usec,
                    const std::string &frame_id, const std::string url,
                    const Eigen::Matrix4f &pose = Eigen::Matrix4f::Identity(), 
-                   const Eigen::Vector3f &scale = Eigen::Vector3f::Zero());
+                   const Eigen::Vector3f &scale = Eigen::Vector3f::Ones());
 
   // show pointcloud
   void showPointCloud(const std::string &topic_nm, const int64_t &usec,
