@@ -68,6 +68,33 @@ void Visualizer::showCameraCalibration(const std::string &topic_nm, const int64_
   server_->SendMessage(topic_nm, usec, cam_calib_msg);
 }
 
+void Visualizer::show3DModel(const std::string &topic_nm, const int64_t &usec,
+                             const std::string &frame_id, const std::string url,
+                             const Eigen::Matrix4f &pose, const Eigen::Vector3f &scale) {
+  fg_msg::SceneUpdate scene_update_msg;
+  auto* scene_entity_msg = scene_update_msg.add_entities();
+  fg::utility::SetMsgTimeStamp(usec, scene_entity_msg);
+  scene_entity_msg->set_frame_id(frame_id);
+
+  std::string id = "body";
+  scene_entity_msg->set_frame_locked(true);
+
+  auto *model_msg = scene_entity_msg->add_models();
+  auto *model_pose = model_msg->mutable_pose();
+  utility::Transformation3ToPosOri(pose, model_pose->mutable_position(),
+                                   model_pose->mutable_orientation());
+
+  auto *model_scale = model_msg->mutable_scale();
+  model_scale->set_x(scale.x());
+  model_scale->set_y(scale.y());
+  model_scale->set_z(scale.z());
+
+  model_msg->set_url(url);
+  model_msg->set_override_color(false);
+
+  server_->SendMessage(topic_nm, usec, scene_update_msg);
+}
+
 // show pointcloud
 void Visualizer::showPointCloud(const std::string &topic_nm,
                                 const int64_t &usec,

@@ -6,6 +6,7 @@
 #include "foxglove/PoseInFrame.pb.h"
 #include "foxglove/PosesInFrame.pb.h"
 #include "foxglove/CameraCalibration.pb.h"
+#include "foxglove/SceneUpdate.pb.h"
 #include "foxglove/utility.h"
 
 #include <pcl/point_types.h>
@@ -42,6 +43,11 @@ public:
   void showCameraCalibration(const std::string &topic_nm, const int64_t &usec,
                              const std::string &frame_id, const Eigen::Matrix3f &K, 
                              const int width, const int height, const Eigen::Matrix<float, 3, 4> &P);
+
+  void show3DModel(const std::string &topic_nm, const int64_t &usec,
+                   const std::string &frame_id, const std::string url,
+                   const Eigen::Matrix4f &pose = Eigen::Matrix4f::Identity(), 
+                   const Eigen::Vector3f &scale = Eigen::Vector3f::Zero());
 
   // show pointcloud
   void showPointCloud(const std::string &topic_nm, const int64_t &usec,
