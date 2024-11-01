@@ -5,6 +5,7 @@
 #include "foxglove/PointCloud.pb.h"
 #include "foxglove/PoseInFrame.pb.h"
 #include "foxglove/PosesInFrame.pb.h"
+#include "foxglove/CameraCalibration.pb.h"
 #include "foxglove/utility.h"
 
 #include <pcl/point_types.h>
@@ -38,6 +39,10 @@ public:
                  const cv::Mat &viz_img, const std::string &parent_frm, 
                  bool b_send_compressedimg = true);
 
+  void showCameraCalibration(const std::string &topic_nm, const int64_t &usec,
+                             const std::string &frame_id, const Eigen::Matrix3f &K, 
+                             const int width, const int height, const Eigen::Matrix<float, 3, 4> &P);
+
   // show pointcloud
   void showPointCloud(const std::string &topic_nm, const int64_t &usec,
                       const std::vector<std::vector<float>> &pcd,
@@ -47,7 +52,8 @@ public:
   // show pointcloud
   void showPointCloudRGBA(const std::string &topic_nm, const int64_t &usec,
                           const pcl::PointCloud<pcl::PointXYZRGBA> &pcd,
-                          const std::string &parent_frm, const size_t &pc_skip = 1);
+                          const std::string &parent_frm, const size_t &pc_skip = 1, 
+                          const int new_a = -1);
 
   // show pose
   void showPose(const std::string &topic_nm, const int64_t &usec,

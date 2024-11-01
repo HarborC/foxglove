@@ -44,6 +44,30 @@ void Visualizer::showImage(const std::string &topic_nm, const int64_t &usec,
   }
 }
 
+void Visualizer::showCameraCalibration(const std::string &topic_nm, const int64_t &usec,
+                                       const std::string &frame_id, const Eigen::Matrix3f &K, 
+                                       const int width, const int height, const Eigen::Matrix<float, 3, 4> &P) {
+
+  fg_msg::CameraCalibration cam_calib_msg;
+  fg::utility::SetMsgTimeStamp(usec, &cam_calib_msg);
+  cam_calib_msg.set_frame_id(frame_id);
+  cam_calib_msg.set_width(width);
+  cam_calib_msg.set_height(height);
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 3; j++) {
+      cam_calib_msg.add_k(K(i,j));
+    }
+  }
+
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 4; j++) {
+      cam_calib_msg.add_p(P(i,j));
+    }
+  }
+
+  server_->SendMessage(topic_nm, usec, cam_calib_msg);
+}
+
 // show pointcloud
 void Visualizer::showPointCloud(const std::string &topic_nm,
                                 const int64_t &usec,
@@ -84,10 +108,11 @@ void Visualizer::showPointCloud(const std::string &topic_nm,
 
 void Visualizer::showPointCloudRGBA(const std::string &topic_nm, const int64_t &usec,
                                     const pcl::PointCloud<pcl::PointXYZRGBA> &pcd,
-                                    const std::string &parent_frm, const size_t &pc_skip) {
+                                    const std::string &parent_frm, const size_t &pc_skip,
+                                    const int new_a) {
   fg_msg::PointCloud pc_msg;
   fg::utility::SetPointCloudMsgProperties(&pc_msg);
-  if (fg::utility::AddColorPointsToMsg(pcd, pc_skip, &pc_msg)) {
+  if (fg::utility::AddColorPointsToMsg(pcd, pc_skip, &pc_msg, new_a)) {
     pc_msg.set_frame_id(parent_frm);
     fg::utility::SetMsgTimeStamp(usec, &pc_msg);
     server_->SendMessage(topic_nm, usec, pc_msg);

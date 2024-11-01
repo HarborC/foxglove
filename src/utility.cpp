@@ -72,7 +72,7 @@ void setLineProps(const ::foxglove::LinePrimitive::Type& line_type,
 }
 
 bool AddColorPointsToMsg(const pcl::PointCloud<pcl::PointXYZRGBA>& raw_pc, const size_t skip_n,
-                         ::foxglove::PointCloud* pc_msg) {
+                         ::foxglove::PointCloud* pc_msg, const int new_a) {
   if (pc_msg->point_stride() != 16 && pc_msg->point_stride() != 12) {
     return false;
   }
@@ -92,23 +92,44 @@ bool AddColorPointsToMsg(const pcl::PointCloud<pcl::PointXYZRGBA>& raw_pc, const
     (*msg_data)[offset + 2] = temp_buf[2];
     (*msg_data)[offset + 3] = temp_buf[3];
   };
-  for (size_t pi = 0; pi < raw_pc.size(); pi += skip_n) {
-    if (offset_i >= msg_data->size()) {
-      break;
-    }
-    const auto& pt_i = raw_pc.at(pi);
-    cp_float_to_msg_data(getPtElem(pt_i, 0), offset_i);
-    offset_i += 4;
-    cp_float_to_msg_data(getPtElem(pt_i, 1), offset_i);
-    offset_i += 4;
-    cp_float_to_msg_data(getPtElem(pt_i, 2), offset_i);
-    offset_i += 4;
 
-    (*msg_data)[offset_i++] = static_cast<char>(pt_i.r);
-    (*msg_data)[offset_i++] = static_cast<char>(pt_i.g);
-    (*msg_data)[offset_i++] = static_cast<char>(pt_i.b);
-    (*msg_data)[offset_i++] = static_cast<char>(pt_i.a);
-    
+  if (new_a >= 0) {
+    char new_a_char = static_cast<char>(new_a);
+    for (size_t pi = 0; pi < raw_pc.size(); pi += skip_n) {
+      if (offset_i >= msg_data->size()) {
+        break;
+      }
+      const auto& pt_i = raw_pc.at(pi);
+      cp_float_to_msg_data(pt_i.x, offset_i);
+      offset_i += 4;
+      cp_float_to_msg_data(pt_i.y, offset_i);
+      offset_i += 4;
+      cp_float_to_msg_data(pt_i.z, offset_i);
+      offset_i += 4;
+
+      (*msg_data)[offset_i++] = static_cast<char>(pt_i.r);
+      (*msg_data)[offset_i++] = static_cast<char>(pt_i.g);
+      (*msg_data)[offset_i++] = static_cast<char>(pt_i.b);
+      (*msg_data)[offset_i++] = new_a_char;
+    }
+  } else {
+    for (size_t pi = 0; pi < raw_pc.size(); pi += skip_n) {
+      if (offset_i >= msg_data->size()) {
+        break;
+      }
+      const auto& pt_i = raw_pc.at(pi);
+      cp_float_to_msg_data(pt_i.x, offset_i);
+      offset_i += 4;
+      cp_float_to_msg_data(pt_i.y, offset_i);
+      offset_i += 4;
+      cp_float_to_msg_data(pt_i.z, offset_i);
+      offset_i += 4;
+
+      (*msg_data)[offset_i++] = static_cast<char>(pt_i.r);
+      (*msg_data)[offset_i++] = static_cast<char>(pt_i.g);
+      (*msg_data)[offset_i++] = static_cast<char>(pt_i.b);
+      (*msg_data)[offset_i++] = static_cast<char>(pt_i.a);
+    }
   }
   return true;
 }

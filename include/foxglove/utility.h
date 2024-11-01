@@ -90,7 +90,7 @@ inline float getPtElem<Eigen::Vector3f>(const Eigen::Vector3f& pt, const size_t 
 }
 
 bool AddColorPointsToMsg(const pcl::PointCloud<pcl::PointXYZRGBA>& raw_pc, const size_t skip_n,
-                         ::foxglove::PointCloud* pc_msg);
+                         ::foxglove::PointCloud* pc_msg, const int new_a = -1);
 
 template <typename PointContainerT>
 bool AddPointsToMsg(const PointContainerT& raw_pc, const size_t skip_n,
