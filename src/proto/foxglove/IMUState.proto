@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+import "foxglove/Pose.proto";
+import "foxglove/Quaternion.proto";
+import "foxglove/Vector3.proto";
+import "google/protobuf/timestamp.proto";
+
+package foxglove;
+
+message IMUState {
+  // Timestamp of pose
+  google.protobuf.Timestamp timestamp = 1;
+
+  // Frame of reference for pose position and orientation
+  string frame_id = 2;
+
+  // Pose in 3D space
+  foxglove.Pose pose = 3;
+
+  // Velocity in 3D space
+  foxglove.Vector3 velocity = 4;
+
+  // Acc Bias in 3D space
+  foxglove.Vector3 accel_bias = 5;
+
+  // Gyr Bias in 3D space
+  foxglove.Vector3 gyro_bias = 6;
+}

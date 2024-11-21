@@ -73,6 +73,11 @@ public:
                   const Eigen::Quaterniond& orientation = Eigen::Quaterniond::Identity(), 
                   const Eigen::Vector3d& magnetic_field = Eigen::Vector3d::Zero());
 
+  void publishIMUState(const std::string &topic_nm, const int64_t &usec,
+                       const std::string &frame_id, const Eigen::Matrix4f& pose, 
+                       const Eigen::Vector3f& velocity, const Eigen::Vector3f& accel_bias, 
+                       const Eigen::Vector3f& gyro_bias);
+
   // publish imu
   void publishVector3(const std::string &topic_nm, const int64_t &usec, const Eigen::Vector3f& vec);
 

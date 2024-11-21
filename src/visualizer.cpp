@@ -6,6 +6,7 @@
 #include "foxglove/CameraCalibration.pb.h"
 #include "foxglove/SceneUpdate.pb.h"
 #include "foxglove/IMU.pb.h"
+#include "foxglove/IMUState.pb.h"
 #include "foxglove/Vector3.pb.h"
 
 #include <omp.h>
@@ -222,6 +223,36 @@ void Visualizer::publishVector3(const std::string &topic_nm, const int64_t &usec
   vec_msg.set_z(vec.z());
 
   server_->SendMessage(topic_nm, usec, vec_msg);
+}
+
+void Visualizer::publishIMUState(const std::string &topic_nm, const int64_t &usec,
+                       const std::string &frame_id, const Eigen::Matrix4f& pose, 
+                       const Eigen::Vector3f& velocity, const Eigen::Vector3f& accel_bias, 
+                       const Eigen::Vector3f& gyro_bias) {
+  fg_msg::IMUState imu_state_msg;
+  utility::SetMsgTimeStamp(usec, &imu_state_msg);
+                       
+  imu_state_msg.set_frame_id(frame_id);
+  auto *imu_pose = imu_state_msg.mutable_pose();
+  utility::Transformation3ToPosOri(pose, imu_pose->mutable_position(),
+                                   imu_pose->mutable_orientation());
+                                   
+  auto *imu_velocity = imu_state_msg.mutable_velocity();
+  imu_velocity->set_x(velocity.x());
+  imu_velocity->set_y(velocity.y());
+  imu_velocity->set_z(velocity.z());
+  
+  auto *imu_accel_bias = imu_state_msg.mutable_accel_bias();
+  imu_accel_bias->set_x(accel_bias.x());
+  imu_accel_bias->set_y(accel_bias.y());
+  imu_accel_bias->set_z(accel_bias.z());
+  
+  auto *imu_gyro_bias = imu_state_msg.mutable_gyro_bias();
+  imu_gyro_bias->set_x(gyro_bias.x());
+  imu_gyro_bias->set_y(gyro_bias.y());
+  imu_gyro_bias->set_z(gyro_bias.z());
+  
+  server_->SendMessage(topic_nm, usec, imu_state_msg);
 }
 
 } // namespace foxglove_viz
