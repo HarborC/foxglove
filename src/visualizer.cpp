@@ -1,4 +1,13 @@
 #include "foxglove/visualizer.h"
+#include "foxglove/FrameTransform.pb.h"
+#include "foxglove/PointCloud.pb.h"
+#include "foxglove/PoseInFrame.pb.h"
+#include "foxglove/PosesInFrame.pb.h"
+#include "foxglove/CameraCalibration.pb.h"
+#include "foxglove/SceneUpdate.pb.h"
+#include "foxglove/IMU.pb.h"
+#include "foxglove/Vector3.pb.h"
+
 #include <omp.h>
 
 namespace foxglove_viz {
@@ -170,4 +179,49 @@ void Visualizer::showPath(const std::string &topic_nm, const int64_t &usec,
   }
   server_->SendMessage(topic_nm, usec, path_msg);
 }
+
+void Visualizer::publishIMU(const std::string &topic_nm, const int64_t &usec,
+                            const std::string &frame_id, 
+                            const Eigen::Vector3d& acceleration, 
+                            const Eigen::Vector3d& angular_velocity, 
+                            const Eigen::Quaterniond& orientation, 
+                            const Eigen::Vector3d& magnetic_field) {
+  fg_msg::IMU imu_msg;
+  fg::utility::SetMsgTimeStamp(usec, &imu_msg);
+  imu_msg.set_frame_id(frame_id);
+
+  auto *accel = imu_msg.mutable_acceleration();
+  accel->set_x(acceleration.x());
+  accel->set_y(acceleration.y());
+  accel->set_z(acceleration.z());
+
+  auto *gyro = imu_msg.mutable_angular_velocity();
+  gyro->set_x(angular_velocity.x());
+  gyro->set_y(angular_velocity.y());
+  gyro->set_z(angular_velocity.z());
+
+  auto *orien = imu_msg.mutable_orientation();
+  orien->set_x(orientation.x());
+  orien->set_y(orientation.y());
+  orien->set_z(orientation.z());
+  orien->set_w(orientation.w());
+
+  auto *magn = imu_msg.mutable_magnetic_field();
+  magn->set_x(magnetic_field.x());
+  magn->set_y(magnetic_field.y());
+  magn->set_z(magnetic_field.z());
+
+  server_->SendMessage(topic_nm, usec, imu_msg);
+}
+
+void Visualizer::publishVector3(const std::string &topic_nm, const int64_t &usec, const Eigen::Vector3f& vec) {
+  fg_msg::Vector3 vec_msg;
+
+  vec_msg.set_x(vec.x());
+  vec_msg.set_y(vec.y());
+  vec_msg.set_z(vec.z());
+
+  server_->SendMessage(topic_nm, usec, vec_msg);
+}
+
 } // namespace foxglove_viz

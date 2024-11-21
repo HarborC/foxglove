@@ -1,12 +1,6 @@
 #pragma once
 
 #include "foxglove/foxglove_server.h"
-#include "foxglove/FrameTransform.pb.h"
-#include "foxglove/PointCloud.pb.h"
-#include "foxglove/PoseInFrame.pb.h"
-#include "foxglove/PosesInFrame.pb.h"
-#include "foxglove/CameraCalibration.pb.h"
-#include "foxglove/SceneUpdate.pb.h"
 #include "foxglove/utility.h"
 
 #include <pcl/point_types.h>
@@ -70,6 +64,17 @@ public:
   void showPath(const std::string &topic_nm, const int64_t &usec,
                 const std::vector<Eigen::Matrix4f> &poses,
                 const std::string &parent_frm);
+
+  // publish imu
+  void publishIMU(const std::string &topic_nm, const int64_t &usec,
+                  const std::string &frame_id, 
+                  const Eigen::Vector3d& acceleration = Eigen::Vector3d::Zero(), 
+                  const Eigen::Vector3d& angular_velocity = Eigen::Vector3d::Zero(), 
+                  const Eigen::Quaterniond& orientation = Eigen::Quaterniond::Identity(), 
+                  const Eigen::Vector3d& magnetic_field = Eigen::Vector3d::Zero());
+
+  // publish imu
+  void publishVector3(const std::string &topic_nm, const int64_t &usec, const Eigen::Vector3f& vec);
 
 private:
   std::shared_ptr<FoxgloveServer> server_;

@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+import "foxglove/Quaternion.proto";
+import "foxglove/Vector3.proto";
+import "google/protobuf/timestamp.proto";
+
+package foxglove;
+
+message IMU {
+  // Timestamp of the entity
+  google.protobuf.Timestamp timestamp = 1;
+
+  // Frame of reference
+  string frame_id = 2;
+
+  // Linear acceleration in 3D space
+  foxglove.Vector3 acceleration = 3;
+
+  // Angular velocity in 3D space
+  foxglove.Vector3 angular_velocity = 4;
+
+  // Orientation as a quaternion in 3D space
+  foxglove.Quaternion orientation = 5;
+
+  // Magnetic field in 3D space
+  foxglove.Vector3 magnetic_field = 6;
+}
