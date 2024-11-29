@@ -65,6 +65,12 @@ public:
                 const std::vector<Eigen::Matrix4f> &poses,
                 const std::string &parent_frm);
 
+  // show mesh
+  void showTriangles(const std::string &topic_nm, const int64_t &usec, const std::string &frame_id,
+                const std::vector<Eigen::Vector3f> &points,
+                const std::vector<std::vector<float>> &colors,
+                const std::vector<uint32_t> &indices = {});
+
   // publish imu
   void publishIMU(const std::string &topic_nm, const int64_t &usec,
                   const std::string &frame_id, 

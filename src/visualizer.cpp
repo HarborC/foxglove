@@ -8,6 +8,7 @@
 #include "foxglove/IMU.pb.h"
 #include "foxglove/IMUState.pb.h"
 #include "foxglove/Vector3.pb.h"
+#include "foxglove/TriangleListPrimitive.pb.h"
 
 #include <omp.h>
 
@@ -86,7 +87,6 @@ void Visualizer::show3DModel(const std::string &topic_nm, const int64_t &usec,
   fg::utility::SetMsgTimeStamp(usec, scene_entity_msg);
   scene_entity_msg->set_frame_id(frame_id);
 
-  std::string id = "body";
   scene_entity_msg->set_frame_locked(true);
 
   auto *model_msg = scene_entity_msg->add_models();
@@ -102,6 +102,45 @@ void Visualizer::show3DModel(const std::string &topic_nm, const int64_t &usec,
   model_msg->set_url(url);
   model_msg->set_override_color(false);
 
+  server_->SendMessage(topic_nm, usec, scene_update_msg);
+}
+
+void Visualizer::showTriangles(const std::string &topic_nm, const int64_t &usec,
+                               const std::string &frame_id, const std::vector<Eigen::Vector3f> &points,
+                               const std::vector<std::vector<float>> &colors, const std::vector<uint32_t> &indices) {
+  fg_msg::SceneUpdate scene_update_msg;
+  auto* scene_entity_msg = scene_update_msg.add_entities();
+  fg::utility::SetMsgTimeStamp(usec, scene_entity_msg);
+  scene_entity_msg->set_frame_id(frame_id);
+
+  scene_entity_msg->set_frame_locked(true);
+
+  auto *triangles_msg = scene_entity_msg->add_triangles();
+
+  auto *triangles_pose = triangles_msg->mutable_pose();
+  Eigen::Matrix4f pose = Eigen::Matrix4f::Identity();
+  utility::Transformation3ToPosOri(pose, triangles_pose->mutable_position(),
+                                   triangles_pose->mutable_orientation());
+
+  for (const auto &point : points) {
+    auto *point_msg = triangles_msg->add_points();
+    point_msg->set_x(point.x());
+    point_msg->set_y(point.y());
+    point_msg->set_z(point.z());
+
+    auto *color_msg = triangles_msg->add_colors();
+    color_msg->set_r(colors[0][0]);
+    color_msg->set_g(colors[0][1]);
+    color_msg->set_b(colors[0][2]);
+    color_msg->set_a(colors[0][3]);
+  }
+
+  if (indices.size()) {
+    for (const auto &index : indices) {
+      triangles_msg->add_indices(index);
+    }
+  }
+  
   server_->SendMessage(topic_nm, usec, scene_update_msg);
 }
 
