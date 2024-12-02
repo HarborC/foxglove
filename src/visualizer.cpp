@@ -122,17 +122,18 @@ void Visualizer::showTriangles(const std::string &topic_nm, const int64_t &usec,
   utility::Transformation3ToPosOri(pose, triangles_pose->mutable_position(),
                                    triangles_pose->mutable_orientation());
 
-  for (const auto &point : points) {
+  for (int i = 0; i < points.size(); i++) {
+    auto point = points[i];
     auto *point_msg = triangles_msg->add_points();
     point_msg->set_x(point.x());
     point_msg->set_y(point.y());
     point_msg->set_z(point.z());
 
     auto *color_msg = triangles_msg->add_colors();
-    color_msg->set_r(colors[0][0]);
-    color_msg->set_g(colors[0][1]);
-    color_msg->set_b(colors[0][2]);
-    color_msg->set_a(colors[0][3]);
+    color_msg->set_r(colors[i][0]);
+    color_msg->set_g(colors[i][1]);
+    color_msg->set_b(colors[i][2]);
+    color_msg->set_a(colors[i][3]);
   }
 
   if (indices.size()) {
